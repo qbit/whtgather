@@ -1,6 +1,15 @@
 var twit = require( 'twit' ),
+	data_source = {
+		twitter: 'twss',
+		irc: { 
+			server: 'irc.freenode.net',
+			channels: [ '#devious' ],
+			nick: 'shiftysnifty'
+		},
+		rss: [ 'http://www.reddit.com/r/all/new/.rss' ]
+	},
 	irc = require( 'irc' ),
-	rss = require( 'feed-poll' )( [ 'http://www.reddit.com/r/all/new/.rss' ] ),
+	rss = require( 'feed-poll' )( data_source.rss ),
 	colors = require( 'colors' ),
 	nconf = require( 'nconf' );
 
@@ -9,8 +18,8 @@ nconf.file( { file: __dirname + '/creds.json' } );
 var creds = nconf.get( 'twitter' );
 
 var twitter = new twit( creds );
-var irc_client = new irc.Client( 'irc.freenode.net', 'shiftysnifty', {
-	channels: [ '#devious' ]
+var irc_client = new irc.Client( data_source.irc.server, data_source.irc.nick, {
+	channels: data_source.irc.channels
 });
 
 function gather_data( type, obj ) {
@@ -35,7 +44,7 @@ function gather_data( type, obj ) {
 	console.log( "new data from '%s': %s", type[color], msg );
 }
 
-twitter.stream( 'statuses/filter', { track: 'twss' }, function( str ) {
+twitter.stream( 'statuses/filter', { track: data_source.twitter }, function( str ) {
 	str.on( 'tweet', function( tw ) {
 		gather_data( 'tweet', tw );
 	});
