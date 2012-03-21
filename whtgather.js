@@ -41,6 +41,13 @@ function gather_data( type, obj ) {
 		color = 'green';
 	}
 
+	/*
+	 * This is where you would further refine the data.. blow away html
+	 * elements.. save meta information ( long / lat for example ), and
+	 * do general info cleanup.
+	 *
+	 */
+
 	console.log( "new data from '%s': %s", type[color], msg );
 }
 
